@@ -1,0 +1,8 @@
+
+{
+  "name": "InstaNews Pro - ND 104.5 FM",
+  "description": "Transforme reportagens em posts profissionais para Instagram com a marca da ND 104.5 FM.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
