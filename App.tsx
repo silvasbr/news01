@@ -1,8 +1,8 @@
 
 import React, { useState, useRef, useCallback } from 'react';
-import { NewsContent, AppState } from './types';
-import { processNewsContent } from './services/geminiService';
-import { NewsPost } from './components/NewsPost';
+import { NewsContent, AppState } from './types.ts';
+import { processNewsContent } from './services/geminiService.ts';
+import { NewsPost } from './components/NewsPost.tsx';
 import * as htmlToImage from 'html-to-image';
 
 // Logo Padrão: ND 104.5 FM
@@ -44,7 +44,7 @@ const App: React.FC = () => {
         isProcessing: false
       }));
     } catch (err) {
-      alert("Erro: " + (err as Error).message);
+      alert("Erro ao processar: " + (err as Error).message);
       setState(prev => ({ ...prev, isProcessing: false }));
     }
   };
@@ -91,7 +91,6 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-100">
-      {/* Header Estilizado */}
       <header className="w-full bg-[#050a1d] border-b border-white/10 py-5 px-8 flex justify-between items-center shadow-lg text-white">
         <div className="flex items-center gap-4">
           <img src={DEFAULT_LOGO} alt="ND Logo" className="h-10 w-auto" />
@@ -146,11 +145,9 @@ const App: React.FC = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-            {/* Editor */}
             <div className="lg:col-span-5 space-y-8 animate-in slide-in-from-left-6 duration-500">
               <div className="bg-white p-8 rounded-3xl shadow-lg border border-slate-200 space-y-6">
                 <h3 className="font-black text-2xl text-[#050a1d] border-b-4 border-red-600 pb-2 w-fit">Editor ND</h3>
-                
                 <div className="space-y-6">
                   <div>
                     <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Manchete (Título)</label>
@@ -161,7 +158,6 @@ const App: React.FC = () => {
                       className="w-full p-4 bg-slate-50 rounded-xl border border-slate-200 focus:ring-2 focus:ring-red-500 outline-none font-bold text-slate-800"
                     />
                   </div>
-                  
                   <div>
                     <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Resumo da Notícia</label>
                     <textarea 
@@ -170,7 +166,6 @@ const App: React.FC = () => {
                       className="w-full h-32 p-4 bg-slate-50 rounded-xl border border-slate-200 focus:ring-2 focus:ring-red-500 outline-none resize-none font-medium text-slate-600"
                     />
                   </div>
-
                   <div className="pt-4 border-t border-slate-100 space-y-6">
                     <div>
                       <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Link Direto da Imagem</label>
@@ -182,7 +177,6 @@ const App: React.FC = () => {
                         className="w-full p-4 bg-slate-50 rounded-xl border border-slate-200 focus:ring-1 focus:ring-red-500 outline-none"
                       />
                     </div>
-
                     <div className="grid grid-cols-2 gap-4">
                       <div className="p-4 bg-slate-100 rounded-xl border border-slate-200">
                         <label className="block text-[10px] font-black text-slate-500 uppercase mb-2">Subir Nova Foto</label>
@@ -204,7 +198,6 @@ const App: React.FC = () => {
                       </div>
                     </div>
                   </div>
-
                   <div className="flex items-center gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
                     <input 
                       type="checkbox" 
@@ -217,21 +210,14 @@ const App: React.FC = () => {
                   </div>
                 </div>
               </div>
-
               <div className="bg-white p-8 rounded-3xl shadow-md border border-slate-200">
                 <h3 className="font-black text-lg text-slate-800 mb-6 uppercase">Download Final</h3>
                 <div className="grid grid-cols-2 gap-6">
-                  <button 
-                    onClick={() => downloadPost('feed')}
-                    className="flex flex-col items-center gap-3 p-6 rounded-2xl border-4 border-dotted border-slate-100 hover:border-red-500 hover:bg-red-50 transition-all group"
-                  >
+                  <button onClick={() => downloadPost('feed')} className="flex flex-col items-center gap-3 p-6 rounded-2xl border-4 border-dotted border-slate-100 hover:border-red-500 hover:bg-red-50 transition-all group">
                     <span className="text-4xl group-hover:scale-110 transition-transform">🖼️</span>
                     <span className="font-black text-xs text-slate-700 uppercase">FEED (4:5)</span>
                   </button>
-                  <button 
-                    onClick={() => downloadPost('story')}
-                    className="flex flex-col items-center gap-3 p-6 rounded-2xl border-4 border-dotted border-slate-100 hover:border-red-500 hover:bg-red-50 transition-all group"
-                  >
+                  <button onClick={() => downloadPost('story')} className="flex flex-col items-center gap-3 p-6 rounded-2xl border-4 border-dotted border-slate-100 hover:border-red-500 hover:bg-red-50 transition-all group">
                     <span className="text-4xl group-hover:scale-110 transition-transform">📱</span>
                     <span className="font-black text-xs text-slate-700 uppercase">STORY (9:16)</span>
                   </button>
@@ -239,37 +225,18 @@ const App: React.FC = () => {
               </div>
             </div>
 
-            {/* Preview */}
             <div className="lg:col-span-7 space-y-8">
               <div className="flex bg-slate-200 p-1.5 rounded-2xl w-fit mx-auto border border-slate-300">
-                <button 
-                  onClick={() => setActiveFormat('feed')}
-                  className={`px-8 py-3 rounded-xl font-black text-sm transition-all ${activeFormat === 'feed' ? 'bg-white text-blue-900 shadow-md scale-105' : 'text-slate-500 hover:text-slate-800'}`}
-                >
-                  PREVIEW FEED
-                </button>
-                <button 
-                  onClick={() => setActiveFormat('story')}
-                  className={`px-8 py-3 rounded-xl font-black text-sm transition-all ${activeFormat === 'story' ? 'bg-white text-blue-900 shadow-md scale-105' : 'text-slate-500 hover:text-slate-800'}`}
-                >
-                  PREVIEW STORY
-                </button>
+                <button onClick={() => setActiveFormat('feed')} className={`px-8 py-3 rounded-xl font-black text-sm transition-all ${activeFormat === 'feed' ? 'bg-white text-blue-900 shadow-md scale-105' : 'text-slate-500 hover:text-slate-800'}`}>PREVIEW FEED</button>
+                <button onClick={() => setActiveFormat('story')} className={`px-8 py-3 rounded-xl font-black text-sm transition-all ${activeFormat === 'story' ? 'bg-white text-blue-900 shadow-md scale-105' : 'text-slate-500 hover:text-slate-800'}`}>PREVIEW STORY</button>
               </div>
-
               <div className="flex justify-center items-center bg-[#050a1d]/5 rounded-[3rem] p-12 min-h-[750px] overflow-hidden relative border border-slate-200 shadow-inner">
                 <div className="transform scale-[0.35] md:scale-[0.45] lg:scale-[0.4] xl:scale-[0.45]">
-                   {/* Renders invisíveis para exportação real */}
                    <div className="absolute opacity-0 pointer-events-none">
                       <div ref={feedRef}><NewsPost content={state.content} format="feed" showLogo={state.showLogo} /></div>
                       <div ref={storyRef}><NewsPost content={state.content} format="story" showLogo={state.showLogo} /></div>
                    </div>
-
-                   {/* Renderização do Preview visível */}
-                   <NewsPost 
-                    content={state.content} 
-                    format={activeFormat} 
-                    showLogo={state.showLogo} 
-                   />
+                   <NewsPost content={state.content} format={activeFormat} showLogo={state.showLogo} />
                 </div>
               </div>
               <p className="text-center text-slate-400 text-xs font-black uppercase tracking-[0.3em]">Ambiente de Produção ND 104.5 FM</p>
@@ -277,7 +244,6 @@ const App: React.FC = () => {
           </div>
         )}
       </main>
-      
       <footer className="py-12 text-slate-400 text-[10px] font-black uppercase tracking-[0.5em] text-center border-t border-slate-200 bg-white">
         © 2024 SISTEMA DE JORNALISMO ND — INTELIGÊNCIA ARTIFICIAL
       </footer>
